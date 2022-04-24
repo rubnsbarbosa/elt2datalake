@@ -1,6 +1,6 @@
 ## ELT Data Pipeline with K8s CronJob, Azure Data Lake
 
-In this first part I will show how to create an ELT. We'll extract data from a Public API called IntegraSUS regarding Covid-19 data, and load it on Azure Data Lake Storage. So, this ELT will be containerized on Azure Container Registry (ACR), and we will use Azure Kubernetes Service (AKS) to schedule our job on K8s cluster to run daily.
+We'll extract data from a Public API called IntegraSUS regarding Covid-19 data, and load it on Azure Data Lake Storage. So, this ELT will be containerized on Azure Container Registry (ACR), and we will use Azure Kubernetes Service (AKS) to schedule our job on K8s cluster to run daily.
 
 ### build the docker image using docker build command
 
