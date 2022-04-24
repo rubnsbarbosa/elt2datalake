@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  creationTimestamp: null
+  name: k8sjob
+spec:
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+      name: k8sjob
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - image: el2datalakejob
+            imagePullPolicy: IfNotPresent
+            name: k8sjob
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: '55 23 * * *'
+status: {}
