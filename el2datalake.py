@@ -19,17 +19,18 @@ previous_date = f"{date.year}-{date.month}-{date.day}"
 
 
 def extract():
-    logger.info('EXTRACTING...')
-    #extract data from API
-    url = 'https://indicadores.integrasus.saude.ce.gov.br/api/casos-coronavirus?dataInicio='+ previous_date +'&dataFim=' + previous_date
+    logger.info("EXTRACTING...")
+    # extract data from API
+    url = "https://indicadores.integrasus.saude.ce.gov.br/api/casos-coronavirus?dataInicio="+ previous_date +"&dataFim=" + previous_date
     req = requests.get(url)
     data = req.json()
     
     if data:
-        with open(f'covid-data-{previous_date}.json', 'w', encoding='utf-8') as file:
+        with open(f"covid-data-{previous_date}.json", "w", encoding="utf-8") as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
     else:
-        logger.info('THERE IS NOT DATA')
+        logger.info("THERE IS NOT DATA")
+
 
 def initialize_storage_account(storage_account_name, storage_account_key):
     try:
@@ -37,31 +38,31 @@ def initialize_storage_account(storage_account_name, storage_account_key):
         service_client = DataLakeServiceClient(account_url="https://"+ storage_account_name +".dfs.core.windows.net", credential=storage_account_key)
 
     except Exception as e:
-        logger.info('EXCEPTION...')
-        logger.info(e)
+        logger.error(f"EXCEPTION... {e}")
+
 
 def create_file_system(container_name):
     try:
         global file_system_client
-        logger.info('CREATING A CONTAINER NAMED AZ-COVID-DATA')
+        logger.info("CREATING A CONTAINER NAMED AZ-COVID-DATA")
         file_system_client = service_client.create_file_system(file_system=container_name)
 
     except Exception as e:
-        logger.info('EXCEPTION...')
-        logger.info(e)
+        logger.error(f"EXCEPTION... {e}")
+
 
 def create_directory():
     try:
-        logger.info('CREATING A DIRECTORY NAMED DIRECTORY-COVID22')
+        logger.info("CREATING A DIRECTORY NAMED DIRECTORY-COVID22")
         file_system_client.create_directory("directory-covid19")
 
     except Exception as e:
-        logger.info('EXCEPTION...')
-        logger.info(e)
+        logger.error(f"EXCEPTION... {e}")
+        
 
 def upload_file_to_container_datalake(local_file, container_name):
     try:
-        logger.info('UPLOADING FILE TO AZURE DATA LAKE STORAGE...')
+        logger.info("UPLOADING FILE TO AZURE DATA LAKE STORAGE...")
         file_system_client = service_client.get_file_system_client(file_system=container_name)
         directory_client = file_system_client.get_directory_client("directory-covid19")
 
@@ -69,11 +70,11 @@ def upload_file_to_container_datalake(local_file, container_name):
 
         with open(local_file, "rb") as data:
             file_client.upload_data(data, overwrite=True)
-            logger.info('UPLOADED TO AZURE DATA LAKE')
+            logger.info("UPLOADED TO AZURE DATA LAKE")
 
     except Exception as e:
-        logger.info('EXCEPTION...')
-        logger.info(e)
+        logger.error(f"EXCEPTION... {e}")
+        
 
 def load_config():
     directory = os.path.dirname(os.path.abspath(__file__))
